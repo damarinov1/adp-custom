@@ -129,19 +129,33 @@ class Admin
     private function collectRules(): array
     {
         if (!function_exists('adp_functions')) return [];
-    
+
         $found = [];
-    
+        $max_products = 2000; // Safety limit to prevent timeout
+        $products_scanned = 0;
+        $start_time = time();
+        $max_execution_time = 25; // Stop before PHP timeout (usually 30s)
+
         // WPML: get all active languages (fallback to single-lang)
         $langs = apply_filters('wpml_active_languages', null, ['skip_missing' => 0]) ?: [];
         $lang_codes = $langs ? array_keys($langs) : [''];
-    
+
         foreach ($lang_codes as $code) {
             if ($code) do_action('wpml_switch_language', $code);
-    
+
             $paged = 1;
             $postsPerPage   = 200;
             do {
+                // Safety check: stop if we've scanned enough products
+                if ($products_scanned >= $max_products) {
+                    break 2; // Break out of both loops
+                }
+
+                // Safety check: stop if approaching time limit
+                if ((time() - $start_time) >= $max_execution_time) {
+                    break 2;
+                }
+
                 $q = new \WP_Query([
                     'post_type'      => 'product',
                     'posts_per_page' => $postsPerPage,
@@ -151,12 +165,16 @@ class Admin
                     'no_found_rows'  => true,
                     'update_post_term_cache' => false,
                     'update_post_meta_cache' => false,
+                    'orderby'        => 'ID',
+                    'order'          => 'ASC',
                 ]);
     
                 foreach ($q->posts as $pid) {
+                    $products_scanned++;
+
                     $p = wc_get_product($pid);
                     if (!$p) continue;
-    
+
                     $collect = function(\WC_Product $prod) use (&$found) {
                         // use_empty_cart=true; big qty surfaces bulk/multi-buy rules
                         $rules = adp_functions()->getActiveRulesForProduct($prod, 50, true);

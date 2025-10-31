@@ -1,6 +1,6 @@
 <?php
 /**
- * Loop Price (customized for ADP discounted prices)
+ * Loop Price (customized for ADP discounted prices + Dual Currency BGN/EUR)
  */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
@@ -8,13 +8,22 @@ global $product;
 if ( ! $product ) { return; }
 if ($product->get_price() === '' || $product->get_price() === null) return;
 
+// Import DualCurrency class
+use AdpCustom\DualCurrency;
+
 $suffix = $product->get_price_suffix();
 $fmt = function( $amount ) use ( $suffix ) {
     return wc_price( (float) $amount ) . $suffix;
 };
 
+// Cache function_exists checks
+static $adp_available = null;
+if ($adp_available === null) {
+    $adp_available = function_exists('adp_functions');
+}
+
 // Get the first ADP rule title that applies to this product (ADP-aware)
-$get_adp_rule_title = function (WC_Product $p): string {
+$get_adp_rule_title = function (WC_Product $p) use ($adp_available): string {
     // Check cache first
     $cache_key = 'adp_rule_title_' . $p->get_id();
     $cached_title = wp_cache_get($cache_key, 'adp_custom');
@@ -22,7 +31,7 @@ $get_adp_rule_title = function (WC_Product $p): string {
         return $cached_title;
     }
 
-    if (! function_exists('adp_functions')) return '';
+    if (! $adp_available) return '';
 
     try {
         $pf = adp_functions();
@@ -102,12 +111,6 @@ $render_price = function (string $price_html) use ($product, $get_adp_rule_title
     }
 };
 
-// Cache ADP function checks to avoid repeated function_exists calls
-static $adp_available = null;
-if ($adp_available === null) {
-    $adp_available = function_exists('adp_functions');
-}
-
 /**
  * Try to get discounted price/range from
  * Advanced Dynamic Pricing for WooCommerce (AlgolPlus).
@@ -147,27 +150,47 @@ if ( $product->is_type( 'variable' ) ) {
     // Single price
     if ( $min_active === $max_active ) {
         if ( $min_regular > $min_active ) {
-            $render_price(
-                '<span class="price"><del class="price__old">' . $fmt($min_regular) . '</del> <ins class="price__new">' . $fmt($min_active) . '</ins></span>'
-            );
+            // Has discount - use dual currency discounted format
+            if (DualCurrency::is_enabled()) {
+                $render_price(DualCurrency::format_discounted_dual_price($min_regular, $min_active, $suffix));
+            } else {
+                $render_price(
+                    '<span class="price"><del class="price__old">' . $fmt($min_regular) . '</del> <ins class="price__new">' . $fmt($min_active) . '</ins></span>'
+                );
+            }
         } else {
-            $render_price(
-                '<span class="price"><span class="lowest-price">' . $fmt($min_active) . '</span></span>'
-            );
+            // No discount - use dual currency regular format
+            if (DualCurrency::is_enabled()) {
+                $render_price(DualCurrency::format_regular_dual_price($min_active, $suffix));
+            } else {
+                $render_price(
+                    '<span class="price"><span class="lowest-price">' . $fmt($min_active) . '</span></span>'
+                );
+            }
         }
     } else {
         // Range display (show "From" and strike regular if discounted)
         if ( $min_regular > $min_active ) {
-            $render_price(
-                '<span class="price">' . $prefix . ' ' .
-                '<del class="price__from-old">' . $fmt($min_regular) . '</del> ' .
-                '<ins class="price__from-new">' . $fmt($min_active) . '</ins>' .
-                '</span>'
-            );
+            // Has discount - use dual currency discounted format with prefix
+            if (DualCurrency::is_enabled()) {
+                $render_price(DualCurrency::format_discounted_dual_price($min_regular, $min_active, $suffix, $prefix));
+            } else {
+                $render_price(
+                    '<span class="price">' . $prefix . ' ' .
+                    '<del class="price__from-old">' . $fmt($min_regular) . '</del> ' .
+                    '<ins class="price__from-new">' . $fmt($min_active) . '</ins>' .
+                    '</span>'
+                );
+            }
         } else {
-            $render_price(
-                '<span class="price"><span class="lowest-price">' . $prefix . ' ' . $fmt($min_active) . '</span></span>'
-            );
+            // No discount - use dual currency regular format with prefix
+            if (DualCurrency::is_enabled()) {
+                $render_price(DualCurrency::format_regular_dual_price($min_active, $suffix, $prefix));
+            } else {
+                $render_price(
+                    '<span class="price"><span class="lowest-price">' . $prefix . ' ' . $fmt($min_active) . '</span></span>'
+                );
+            }
         }
     }
 } else {
@@ -177,10 +200,20 @@ if ( $product->is_type( 'variable' ) ) {
     $active      = $adp_min !== null ? $adp_min : wc_get_price_to_display( $product );
 
     if ( $regular > 0 && $active < $regular ) {
-        $render_price(
-            '<span class="price"><del class="price__old">' . $fmt($regular) . '</del> <ins class="price__new">' . $fmt($active) . '</ins></span>'
-        );
+        // Has discount - use dual currency discounted format
+        if (DualCurrency::is_enabled()) {
+            $render_price(DualCurrency::format_discounted_dual_price($regular, $active, $suffix));
+        } else {
+            $render_price(
+                '<span class="price"><del class="price__old">' . $fmt($regular) . '</del> <ins class="price__new">' . $fmt($active) . '</ins></span>'
+            );
+        }
     } else {
-        $render_price('<span class="price">' . $fmt($active) . '</span>');
+        // No discount - use dual currency regular format
+        if (DualCurrency::is_enabled()) {
+            $render_price(DualCurrency::format_regular_dual_price($active, $suffix));
+        } else {
+            $render_price('<span class="price">' . $fmt($active) . '</span>');
+        }
     }
 }

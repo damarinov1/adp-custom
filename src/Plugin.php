@@ -15,9 +15,9 @@ class Plugin
             return;
         }
 
-        $path = plugin_dir_path(__FILE__) . '../style.css';
-        $url  = plugins_url('../style.css', __FILE__);
-        $ver  = file_exists($path) ? (string) filemtime($path) : '1.0.0';
+        $url = plugins_url('../style.css', __FILE__);
+        // Use plugin version from main file instead of filemtime for better performance
+        $ver = '2.0.0';
 
         wp_enqueue_style('milliart-adp-addon', $url, [], $ver);
     }

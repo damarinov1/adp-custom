@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: ADP Custom Addos
- * Description: Extension of Advanced Dynamic Pricing for Woocommerce
- * Version: 1.1.0
+ * Description: Extension of Advanced Dynamic Pricing for Woocommerce with Dual Currency Support (BGN/EUR)
+ * Version: 2.0.0
  * Author: Denis Marinov
  * Text Domain: adp-custom
  * Requires Plugins: advanced-dynamic-pricing-for-woocommerce
@@ -11,7 +11,9 @@
 if ( ! defined('ABSPATH') ) exit;
 
 require_once __DIR__ . '/src/Plugin.php';
-require_once __DIR__.'/src/Admin.php';
+require_once __DIR__ . '/src/Admin.php';
+require_once __DIR__ . '/src/DualCurrency.php';
+require_once __DIR__ . '/src/DualCurrencyHooks.php';
 
 register_activation_hook(__FILE__, function () {
     add_option(\AdpCustom\Admin::OPTION_VISIBILITY, [], false);
@@ -22,11 +24,13 @@ add_action('plugins_loaded', function () {
     if (!class_exists('WooCommerce') || !class_exists('ADP\\Factory')) {
         return;
     }
-    
+
     require_once __DIR__ . '/src/frontend-hooks.php';
 
     (new \AdpCustom\Plugin())->boot();
     (new \AdpCustom\Admin())->boot();
+
+    \AdpCustom\DualCurrencyHooks::init();
 });
 
 add_filter('woocommerce_locate_template', function ($located, $template_name, $template_path) {
