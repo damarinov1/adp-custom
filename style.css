@@ -1,0 +1,29 @@
+/** Sale badge in Elementor product grid */
+.elementor-products-grid ul.products.elementor-grid li.product .onsale {
+    display: block;
+}
+
+.woocommerce span.onsale {
+    background-color: #dd8855;
+    font-size: 1em;
+}
+
+.woocommerce ul.products li.product .onsale {
+    position: absolute;
+    top: .75rem;
+    right: .75rem;
+    border-radius: 9999px;
+    font-weight: 600;
+}
+
+ul.products li.product .discount-title {
+    color: #dd8855;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+    .woocommerce span.onsale {
+        font-size: .85em;
+    }
+}
