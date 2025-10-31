@@ -22,8 +22,105 @@ ul.products li.product .discount-title {
     font-size: 1.1em;
 }
 
+/* Dual Currency Styles (BGN + EUR) */
+.price.dual-currency {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.price.dual-currency .price-eur {
+    display: block;
+}
+
+.price .price__old-eur,
+.price .price__new-eur {
+    font-weight: 500 !important;
+}
+
+.price .eur-equivalent {
+    font-weight: 500;
+    opacity: 0.85;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* Cart totals - force EUR to stay inline */
+.cart_totals .eur-equivalent,
+.woocommerce-checkout-review-order .eur-equivalent,
+.order-total .eur-equivalent {
+    white-space: nowrap !important;
+    display: inline !important;
+}
+
+/* Prevent cart total values from wrapping */
+.cart_totals td,
+.cart_totals .woocommerce-Price-amount,
+.order-total td {
+    white-space: nowrap !important;
+    min-width: fit-content !important;
+}
+
+/* Ensure order total row doesn't break */
+.order-total td,
+.cart_totals .order-total td {
+    white-space: nowrap !important;
+    overflow: visible !important;
+}
+
+.order-total td strong {
+    display: inline !important;
+    white-space: nowrap !important;
+}
+
+/* Ensure proper spacing for dual currency in cart/checkout */
+.woocommerce-cart .price.dual-currency,
+.woocommerce-checkout .price.dual-currency {
+    align-items: flex-end;
+}
+
+/* Cart table EUR prices */
+.shop_table.cart .eur-price {
+    display: block;
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 0.25rem;
+}
+
+.shop_table.cart .eur-price del {
+    opacity: 0.7;
+}
+
+.shop_table.cart .eur-price ins {
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.xoo-wsc-container .price.dual-currency .price-eur {
+    display: none;
+}
+
+/* Email compatibility */
+.woocommerce-email .price.dual-currency {
+    display: block !important;
+}
+
+.woocommerce-email .price-bgn,
+.woocommerce-email .price-eur {
+    display: block !important;
+    margin: 2px 0;
+}
+
 @media (max-width: 768px) {
     .woocommerce span.onsale {
         font-size: .85em;
+    }
+
+    .price.dual-currency {
+        gap: 0.15rem;
+    }
+
+    .price .eur-equivalent {
+        font-size: 0.85em;
     }
 }

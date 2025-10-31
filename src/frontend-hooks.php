@@ -5,11 +5,17 @@ add_action('woocommerce_before_shop_loop_item_title', function () {
     global $product;
     if ( ! $product ) return;
     if ($product->get_price() === '' || $product->get_price() === null) return;
-    
+
+    // Cache function_exists check
+    static $adp_available = null;
+    if ($adp_available === null) {
+        $adp_available = function_exists('adp_functions');
+    }
+
     // Helper: return [regular_display, active_display] for this product
-    $get_pair = function (WC_Product $p): ?array {
+    $get_pair = function (WC_Product $p) use ($adp_available): ?array {
         // ADP path
-        if ( function_exists('adp_functions') && ($pf = adp_functions()) && method_exists($pf, 'getDiscountedProductPrice') ) {
+        if ( $adp_available && ($pf = adp_functions()) && method_exists($pf, 'getDiscountedProductPrice') ) {
             $res = $pf->getDiscountedProductPrice($p, 1, true);
             if ( is_array($res) ) { // variable: [min_active, max_active]
                 $min_active  = isset($res[0]) ? (float) $res[0] : 0.0;
