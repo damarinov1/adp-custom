@@ -1,0 +1,62 @@
+# ADP Custom Addons
+
+A WordPress/WooCommerce plugin that extends [Advanced Dynamic Pricing for WooCommerce](https://wordpress.org/plugins/advanced-dynamic-pricing-for-woocommerce/) with enhanced frontend display and administrative controls.
+
+## Important Notice
+
+This is a **fully custom solution developed specifically for Milliart** and may not work correctly on other WooCommerce sites without modifications. The plugin is tailored to specific business requirements and pricing strategies.
+
+## Requirements
+
+- WordPress
+- WooCommerce
+- [Advanced Dynamic Pricing for WooCommerce](https://wordpress.org/plugins/advanced-dynamic-pricing-for-woocommerce/) (ADP)
+- Optional: WPML (for multi-language support)
+
+## Features
+
+### Frontend Enhancements
+
+- **Discount Percentage Badges** - Visual "% OFF" badges displayed on product archives showing the actual discount amount
+- **ADP-Aware Price Display** - Custom price templates that properly display discounted prices from ADP rules
+- **Pricing Rule Titles** - Shows the name of active discount rules below product prices (e.g., "Bulk Discount", "Volume Pricing")
+- **Smart Price Formatting** - Handles both simple and variable products with strike-through regular prices and highlighted discounted prices
+- **Multi-language Support** - Full WPML compatibility with translated rule titles
+
+### Admin Panel
+
+- **Rule Discovery Scanner** - Automatically scans all products to discover active ADP pricing rules
+- **Visibility Control** - Admin interface to selectively show/hide discount rule titles on the frontend
+- **WooCommerce Integration** - Accessible via WooCommerce > ADP Custom menu
+- **Batch Processing** - Efficiently scans large product catalogs
+- **Caching System** - Optimized performance with WordPress object cache
+
+### Technical Features
+
+- Custom template overrides for WooCommerce price display
+- Security: WordPress nonces and capability checks
+- Error handling with graceful fallbacks
+- Conditional asset loading for performance
+- Multi-language ready with WPML hooks
+
+## Installation
+
+1. Ensure WooCommerce and Advanced Dynamic Pricing for WooCommerce are installed and active
+2. Upload the plugin to `/wp-content/plugins/adp-custom/`
+3. Activate the plugin through WordPress admin
+4. Navigate to WooCommerce > ADP Custom to configure
+
+## Usage
+
+1. Go to **WooCommerce > ADP Custom — Rule Titles**
+2. Click **"Scan rules (update list)"** to discover all active ADP pricing rules
+3. Check/uncheck rules to control which discount titles appear on the frontend
+4. Click **"Save visibility"** to apply changes
+
+## Author
+
+Denis Marinov
+
+## Version
+
+1.1.0
