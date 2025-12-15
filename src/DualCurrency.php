@@ -19,9 +19,6 @@ if (!defined('ADP_CUSTOM_FIXED_EUR_RATE')) {
 
 class DualCurrency {
 
-    private static $cached_rate = null;
-    private static $price_format_cache = null;
-
     public static function is_enabled(): bool
     {
         // Don't cache this result as currency can change during the session
@@ -41,20 +38,14 @@ class DualCurrency {
      */
     public static function get_exchange_rate(): float
     {
-        if (self::$cached_rate !== null) {
-            return self::$cached_rate;
-        }
-
         if (ADP_CUSTOM_USE_MULTICURRENCY_RATE) {
             $rate = self::get_multicurrency_rate();
             if ($rate !== null) {
-                self::$cached_rate = $rate;
                 return $rate;
             }
         }
 
-        self::$cached_rate = ADP_CUSTOM_FIXED_EUR_RATE;
-        return self::$cached_rate;
+        return ADP_CUSTOM_FIXED_EUR_RATE;
     }
 
     /**
@@ -121,25 +112,13 @@ class DualCurrency {
      */
     public static function format_eur_price(float $eur_amount): string
     {
-        // Cache price formatting options
-        if (self::$price_format_cache === null) {
-            self::$price_format_cache = [
-                'decimals' => wc_get_price_decimals(),
-                'decimal_sep' => wc_get_price_decimal_separator(),
-                'thousand_sep' => wc_get_price_thousand_separator(),
-                'currency_pos' => get_option('woocommerce_currency_pos', 'left'),
-            ];
-        }
-
         $symbol = self::get_eur_symbol();
-        $decimals = self::$price_format_cache['decimals'];
-        $decimal_sep = self::$price_format_cache['decimal_sep'];
-        $thousand_sep = self::$price_format_cache['thousand_sep'];
+        $decimals = wc_get_price_decimals();
+        $decimal_sep = wc_get_price_decimal_separator();
+        $thousand_sep = wc_get_price_thousand_separator();
+        $currency_pos = get_option('woocommerce_currency_pos', 'left');
 
         $formatted_amount = number_format($eur_amount, $decimals, $decimal_sep, $thousand_sep);
-
-        // Get currency position
-        $currency_pos = self::$price_format_cache['currency_pos'];
 
         switch ($currency_pos) {
             case 'left':

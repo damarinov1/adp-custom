@@ -29,10 +29,12 @@ ul.products li.product .discount-title {
     gap: 0.3rem;
 }
 
+.bestsellers-section .price-eur,
 .price.dual-currency .price-eur {
     display: block;
 }
 
+.bestsellers-section .price__new-eur,
 .price .price__old-eur,
 .price .price__new-eur {
     font-weight: 500 !important;
@@ -57,7 +59,6 @@ ul.products li.product .discount-title {
 .cart_totals td,
 .cart_totals .woocommerce-Price-amount,
 .order-total td {
-    white-space: nowrap !important;
     min-width: fit-content !important;
 }
 
@@ -83,7 +84,7 @@ ul.products li.product .discount-title {
 .shop_table.cart .eur-price {
     display: block;
     color: #666;
-    font-size: 0.9em;
+    font-size: 12px;
     margin-top: 0.25rem;
 }
 

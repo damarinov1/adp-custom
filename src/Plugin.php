@@ -6,7 +6,7 @@ class Plugin
 {
     public function boot(): void
     {
-        add_action('wp_enqueue_scripts', [$this, 'enqueueCss'], 99);
+        add_action('wp_enqueue_scripts', [$this, 'enqueueCss'], 999);
     }
     
     public function enqueueCss(): void

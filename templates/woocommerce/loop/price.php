@@ -50,7 +50,7 @@ $get_adp_rule_title = function (WC_Product $p) use ($adp_available): string {
     $collect_rules = function (WC_Product $wc_product) use ($pf): array {
         $out = [];
         try {
-            $rules = $pf->getActiveRulesForProduct($wc_product, 50, true);
+            $rules = $pf->getActiveRulesForProduct($wc_product, 2, true);
             if (is_array($rules)) {
                 foreach ($rules as $rule) {
                     if (is_object($rule) && method_exists($rule, 'getId') && method_exists($rule, 'getTitle')) {
