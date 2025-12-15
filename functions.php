@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ADP Custom Addos
  * Description: Extension of Advanced Dynamic Pricing for Woocommerce with Dual Currency Support (BGN/EUR)
- * Version: 2.0.0
+ * Version: 2.1.0
  * Author: Denis Marinov
  * Text Domain: adp-custom
  * Requires Plugins: advanced-dynamic-pricing-for-woocommerce
