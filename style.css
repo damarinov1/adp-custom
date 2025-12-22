@@ -97,6 +97,23 @@ ul.products li.product .discount-title {
     font-weight: 500;
 }
 
+/* Cart table BGN prices (EUR→BGN mode) */
+.shop_table.cart .bgn-price {
+    display: block;
+    color: #666;
+    font-size: 12px;
+    margin-top: 0.25rem;
+}
+
+.shop_table.cart .bgn-price del {
+    opacity: 0.7;
+}
+
+.shop_table.cart .bgn-price ins {
+    text-decoration: none;
+    font-weight: 500;
+}
+
 .xoo-wsc-container .price.dual-currency .price-eur {
     display: none;
 }
@@ -112,6 +129,35 @@ ul.products li.product .discount-title {
     margin: 2px 0;
 }
 
+/* Dual Currency Styles (EUR + BGN) */
+.price .bgn-equivalent {
+    font-weight: 500;
+    opacity: 0.85;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.bestsellers-section .price__new-bgn,
+.price .price__old-bgn,
+.price .price__new-bgn {
+    font-weight: 500 !important;
+}
+
+/* Cart totals - force BGN to stay inline */
+.cart_totals .bgn-equivalent,
+.woocommerce-checkout-review-order .bgn-equivalent,
+.order-total .bgn-equivalent {
+    white-space: nowrap !important;
+    display: inline !important;
+}
+
+/* Ensure proper spacing for dual currency EUR+BGN in cart/checkout */
+.woocommerce-cart .bgn-equivalent,
+.woocommerce-checkout .bgn-equivalent {
+    display: inline-block;
+    margin-left: 0.25em;
+}
+
 @media (max-width: 768px) {
     .woocommerce span.onsale {
         font-size: .85em;
@@ -121,7 +167,8 @@ ul.products li.product .discount-title {
         gap: 0.15rem;
     }
 
-    .price .eur-equivalent {
+    .price .eur-equivalent,
+    .price .bgn-equivalent {
         font-size: 0.85em;
     }
 }
