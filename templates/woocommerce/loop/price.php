@@ -8,8 +8,9 @@ global $product;
 if ( ! $product ) { return; }
 if ($product->get_price() === '' || $product->get_price() === null) return;
 
-// Import DualCurrency class
+// Import DualCurrency classes
 use AdpCustom\DualCurrency;
+use AdpCustom\DualCurrencyEurBgn;
 
 $suffix = $product->get_price_suffix();
 $fmt = function( $amount ) use ( $suffix ) {
@@ -153,6 +154,8 @@ if ( $product->is_type( 'variable' ) ) {
             // Has discount - use dual currency discounted format
             if (DualCurrency::is_enabled()) {
                 $render_price(DualCurrency::format_discounted_dual_price($min_regular, $min_active, $suffix));
+            } elseif (DualCurrencyEurBgn::is_enabled()) {
+                $render_price(DualCurrencyEurBgn::format_discounted_dual_price($min_regular, $min_active, $suffix));
             } else {
                 $render_price(
                     '<span class="price"><del class="price__old">' . $fmt($min_regular) . '</del> <ins class="price__new">' . $fmt($min_active) . '</ins></span>'
@@ -162,6 +165,8 @@ if ( $product->is_type( 'variable' ) ) {
             // No discount - use dual currency regular format
             if (DualCurrency::is_enabled()) {
                 $render_price(DualCurrency::format_regular_dual_price($min_active, $suffix));
+            } elseif (DualCurrencyEurBgn::is_enabled()) {
+                $render_price(DualCurrencyEurBgn::format_regular_dual_price($min_active, $suffix));
             } else {
                 $render_price(
                     '<span class="price"><span class="lowest-price">' . $fmt($min_active) . '</span></span>'
@@ -174,6 +179,8 @@ if ( $product->is_type( 'variable' ) ) {
             // Has discount - use dual currency discounted format with prefix
             if (DualCurrency::is_enabled()) {
                 $render_price(DualCurrency::format_discounted_dual_price($min_regular, $min_active, $suffix, $prefix));
+            } elseif (DualCurrencyEurBgn::is_enabled()) {
+                $render_price(DualCurrencyEurBgn::format_discounted_dual_price($min_regular, $min_active, $suffix, $prefix));
             } else {
                 $render_price(
                     '<span class="price">' . $prefix . ' ' .
@@ -186,6 +193,8 @@ if ( $product->is_type( 'variable' ) ) {
             // No discount - use dual currency regular format with prefix
             if (DualCurrency::is_enabled()) {
                 $render_price(DualCurrency::format_regular_dual_price($min_active, $suffix, $prefix));
+            } elseif (DualCurrencyEurBgn::is_enabled()) {
+                $render_price(DualCurrencyEurBgn::format_regular_dual_price($min_active, $suffix, $prefix));
             } else {
                 $render_price(
                     '<span class="price"><span class="lowest-price">' . $prefix . ' ' . $fmt($min_active) . '</span></span>'
@@ -203,6 +212,8 @@ if ( $product->is_type( 'variable' ) ) {
         // Has discount - use dual currency discounted format
         if (DualCurrency::is_enabled()) {
             $render_price(DualCurrency::format_discounted_dual_price($regular, $active, $suffix));
+        } elseif (DualCurrencyEurBgn::is_enabled()) {
+            $render_price(DualCurrencyEurBgn::format_discounted_dual_price($regular, $active, $suffix));
         } else {
             $render_price(
                 '<span class="price"><del class="price__old">' . $fmt($regular) . '</del> <ins class="price__new">' . $fmt($active) . '</ins></span>'
@@ -212,6 +223,8 @@ if ( $product->is_type( 'variable' ) ) {
         // No discount - use dual currency regular format
         if (DualCurrency::is_enabled()) {
             $render_price(DualCurrency::format_regular_dual_price($active, $suffix));
+        } elseif (DualCurrencyEurBgn::is_enabled()) {
+            $render_price(DualCurrencyEurBgn::format_regular_dual_price($active, $suffix));
         } else {
             $render_price('<span class="price">' . $fmt($active) . '</span>');
         }
