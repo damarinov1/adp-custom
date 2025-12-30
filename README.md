@@ -66,11 +66,23 @@ Denis Marinov
 
 ## Version
 
-2.0.0
+2.2.1
 
 ---
 
 ## Changelog
+
+### Version 2.2.1 (2025)
+**EUR (BGN) Dual Currency Mode**
+
+- Added reverse dual currency: EUR with BGN equivalent when currency=EUR and language=Bulgarian
+- Prices display as `20.00 € (39.11 лв.)` in EUR mode
+- Language detection via WPML with WordPress locale fallback
+- New feature flag: `ADP_CUSTOM_DUAL_CURRENCY_EUR_BGN_ENABLED`
+- Fixed side cart checkout button to show dual currency
+- Fixed cart table price display for EUR mode
+- Both BGN→EUR and EUR→BGN modes work independently based on store currency
+- Complete coverage: products, cart, checkout, orders, emails, Elementor widgets
 
 ### Version 2.0.0 (2025)
 **Major Update: Dual Currency Support**
